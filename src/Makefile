@@ -19,7 +19,7 @@ CFLAGS =  -g `fltk-config --cxxflags `
 endif
 
 scissors: $(OBJS)
-	g++ -o $@ $(OBJS) $(CFLAGS) $(LIBS)
+	clang++ -o $@ $(OBJS) $(CFLAGS) $(LIBS)
 
 clean:
 	rm -f scissors *.o */*.o 
@@ -30,65 +30,65 @@ BrushConfigUI.o: BrushConfigUI.cpp BrushConfigUI.h imgflt.h \
   ImageLib/Image.h ImageLib/RefCntMem.h ImageLib/Image.inl \
   ImageLib/FileIO.h PriorityQueue.h ImgFilterUI.h FltDesignUI.h \
   HelpPageUI.h ScissorPanelUI.h ImgView.h correlation.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c BrushConfigUI.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c BrushConfigUI.cpp $(CFLAGS) $(INCS)
 
 correlation.o: correlation.cpp correlation.h imgflt.h ImageLib/Image.h \
   ImageLib/RefCntMem.h ImageLib/Image.inl ImageLib/FileIO.h \
   PriorityQueue.h ImgFilterUI.h FltDesignUI.h \
   BrushConfigUI.h HelpPageUI.h ScissorPanelUI.h ImgView.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c correlation.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c correlation.cpp $(CFLAGS) $(INCS)
 
 FltDesignUI.o: FltDesignUI.cpp FltDesignUI.h imgflt.h ImageLib/Image.h \
   ImageLib/RefCntMem.h ImageLib/Image.inl ImageLib/FileIO.h \
   PriorityQueue.h ImgFilterUI.h BrushConfigUI.h HelpPageUI.h \
   ScissorPanelUI.h ImgView.h correlation.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c FltDesignUI.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c FltDesignUI.cpp $(CFLAGS) $(INCS)
 
 HelpPageUI.o: HelpPageUI.cpp HelpPageUI.h
-	g++ -o $@ -c HelpPageUI.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c HelpPageUI.cpp $(CFLAGS) $(INCS)
 
 ImgFilterUI.o: ImgFilterUI.cpp ImgFilterUI.h imgflt.h ImageLib/Image.h \
   ImageLib/RefCntMem.h ImageLib/Image.inl ImageLib/FileIO.h \
   PriorityQueue.h FltDesignUI.h BrushConfigUI.h HelpPageUI.h \
   ScissorPanelUI.h ImgView.h correlation.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c ImgFilterUI.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ImgFilterUI.cpp $(CFLAGS) $(INCS)
 
 ImgFltAux.o: ImgFltAux.cpp ImgFltAux.h
-	g++ -o $@ -c ImgFltAux.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ImgFltAux.cpp $(CFLAGS) $(INCS)
 
 ImgFltMain.o: ImgFltMain.cpp imgflt.h ImageLib/Image.h \
   ImageLib/RefCntMem.h ImageLib/Image.inl ImageLib/FileIO.h \
   PriorityQueue.h ImgFilterUI.h FltDesignUI.h \
   BrushConfigUI.h HelpPageUI.h ScissorPanelUI.h ImgView.h \
   correlation.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c ImgFltMain.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ImgFltMain.cpp $(CFLAGS) $(INCS)
 
 ImgView.o: ImgView.cpp ImgView.h imgflt.h ImageLib/Image.h \
   ImageLib/RefCntMem.h ImageLib/Image.inl ImageLib/FileIO.h \
   PriorityQueue.h ImgFilterUI.h FltDesignUI.h BrushConfigUI.h \
   HelpPageUI.h ScissorPanelUI.h correlation.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c ImgView.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ImgView.cpp $(CFLAGS) $(INCS)
 
 iScissor.o: iScissor.cpp correlation.h imgflt.h ImageLib/Image.h \
   ImageLib/RefCntMem.h ImageLib/Image.inl ImageLib/FileIO.h \
   PriorityQueue.h ImgFilterUI.h FltDesignUI.h \
   BrushConfigUI.h HelpPageUI.h ScissorPanelUI.h ImgView.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c iScissor.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c iScissor.cpp $(CFLAGS) $(INCS)
 
 ScissorPanelUI.o: ScissorPanelUI.cpp ScissorPanelUI.h imgflt.h \
   ImageLib/Image.h ImageLib/RefCntMem.h ImageLib/Image.inl \
   ImageLib/FileIO.h PriorityQueue.h ImgFilterUI.h FltDesignUI.h \
   BrushConfigUI.h HelpPageUI.h ImgView.h correlation.h ImgFltAux.h iScissor.h
-	g++ -o $@ -c ScissorPanelUI.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ScissorPanelUI.cpp $(CFLAGS) $(INCS)
 
 ImageLib/FileIO.o: ImageLib/FileIO.cpp ImageLib/Image.h ImageLib/RefCntMem.h \
   ImageLib/Image.inl ImageLib/FileIO.h
-	g++ -o $@ -c ImageLib/FileIO.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ImageLib/FileIO.cpp $(CFLAGS) $(INCS)
 
 ImageLib/Image.o: ImageLib/Image.cpp ImageLib/Image.h ImageLib/RefCntMem.h \
   ImageLib/Image.inl
-	g++ -o $@ -c ImageLib/Image.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ImageLib/Image.cpp $(CFLAGS) $(INCS)
 
 ImageLib/RefCntMem.o: ImageLib/RefCntMem.cpp ImageLib/RefCntMem.h
-	g++ -o $@ -c ImageLib/RefCntMem.cpp $(CFLAGS) $(INCS)
+	clang++ -o $@ -c ImageLib/RefCntMem.cpp $(CFLAGS) $(INCS)
 
