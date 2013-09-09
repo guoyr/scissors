@@ -3,6 +3,7 @@
  * (see also correlation.cpp and iScissor.h for additional TODOs) */
 
 #include <assert.h>
+#include <cmath>
 
 #include "correlation.h"
 #include "iScissor.h"
@@ -21,18 +22,38 @@ inline unsigned char PIXEL(const unsigned char* p, int i, int j, int c, int widt
     return *(p + 3 * (j * width + i) + c);
 }
 
+inline double INTENSITY(const unsigned char* p, int i, int j, int width)
+{
+	return (PIXEL(p, i, j, 'r', width) + PIXEL(p, i, j, 'g', width) + PIXEL(p, i, j, 'b', width))/3.0;
+}
+
 /************************ TODO 1 ***************************
  *InitNodeBuf
  *	INPUT:
  *		img:	a RGB image of size imgWidth by imgHeight;
  *		nodes:	a allocated buffer of Nodes of the same size, one node corresponds to a pixel in img;
- *  OUPUT:
+ *  OUTPUT:
  *      initializes the column, row, and linkCost fields of each node in the node buffer.
  */
 
 void InitNodeBuf(Node* nodes, const unsigned char* img, int imgWidth, int imgHeight)
 {
-printf("TODO: %s:%d\n", __FILE__, __LINE__); 
+
+for (int i = 0; i < imgWidth; i++) {
+	for (int j = 0; j < imgHeight; j++) {
+		double intensity = INTENSITY(img, i, j, imgWidth);
+		NODE(nodes, i, j, imgWidth).column = i;
+		NODE(nodes, i, j, imgWidth).row = j;
+		NODE(nodes, i, j, imgWidth).linkCost[0] = std::abs(intensity - INTENSITY(img, i+1, j, imgWidth));
+		NODE(nodes, i, j, imgWidth).linkCost[1] = std::abs(intensity - INTENSITY(img, i+1, j-1, imgWidth));
+		NODE(nodes, i, j, imgWidth).linkCost[2] = std::abs(intensity - INTENSITY(img, i, j-1, imgWidth));
+		NODE(nodes, i, j, imgWidth).linkCost[3] = std::abs(intensity - INTENSITY(img, i-1, j-1, imgWidth));
+		NODE(nodes, i, j, imgWidth).linkCost[4] = std::abs(intensity - INTENSITY(img, i-1, j, imgWidth));
+		NODE(nodes, i, j, imgWidth).linkCost[5] = std::abs(intensity - INTENSITY(img, i-1, j+1, imgWidth));
+		NODE(nodes, i, j, imgWidth).linkCost[6] = std::abs(intensity - INTENSITY(img, i, j+1, imgWidth));
+		NODE(nodes, i, j, imgWidth).linkCost[7] = std::abs(intensity - INTENSITY(img, i+1, j+1, imgWidth));
+	}
+}
 
 }
 /************************ END OF TODO 1 ***************************/

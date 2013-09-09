@@ -35,9 +35,18 @@ void image_filter(double* rsltImg, const unsigned char* origImg, const unsigned 
                   const double* kernel, int knlWidth, int knlHeight,
                   double scale, double offset)
 {
-    // Note: copying origImg to rsltImg is NOT the solution, it does nothing!
 
-printf("TODO: %s:%d\n", __FILE__, __LINE__); 
+printf("Filtering image\n");
+
+for (int i = 0; i < imgWidth; i++) {
+	for (int j = 0; j < imgHeight; j++) {
+		double pixel[3] = {0.0, 0.0, 0.0};
+		pixel_filter(pixel, i, j, origImg, imgWidth, imgHeight, kernel, knlWidth, knlHeight, scale, offset);
+		for (int c = 0; c < 3; c++) {
+			rsltImg[3*(j*imgWidth+i)+c] = pixel[c];
+		}
+	}
+}
 
 }
 
@@ -74,7 +83,27 @@ void pixel_filter(double rsltPixel[3], int x, int y, const unsigned char* origIm
                   const double* kernel, int knlWidth, int knlHeight,
                   double scale, double offset)
 {
-printf("TODO: %s:%d\n", __FILE__, __LINE__); 
+
+//printf("Filtering pixel %u, %u\n", x, y);
+
+for (int c = 0; c < 3; c++) {
+	for (int i = 0; i < knlWidth; i++) {
+		for (int j = 0; j < knlHeight; j++) {
+			int col = i + x - ((knlHeight - 1)/2);
+			int row = j + y - ((knlWidth - 1)/2);
+			if (col >= imgWidth) {
+				col = x;
+			}
+			if (row >= imgHeight) {
+				row = y;
+			}
+			//printf("Fetching pixel %u, %u\n", col, row);
+			rsltPixel[c] += kernel[j*knlWidth+i] * origImg[3*(row*imgWidth+col)+c];
+		}
+	}
+	rsltPixel[c] /= scale;
+	rsltPixel[c] += offset;
+}
 
 }
 
