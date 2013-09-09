@@ -74,7 +74,7 @@ static int offsetToLinkIndex(int dx, int dy)
  *      width, height:  dimensions of the node buffer;
  *		selection:		if selection != NULL, search path only in the subset of nodes[j*width+i] if selection[j*width+i] = 1;
  *						otherwise, search in the whole set of nodes.
- *		numExpanded:		compute the only the first numExpanded number of nodes; (for debugging)
+ *		numExpanded:		compute only the first numExpanded number of nodes; (for debugging)
  *	OUTPUT:
  *		computes the minimum path tree from the seed node, by assigning
  *		the prevNode field of each node to its predecessor along the minimum
@@ -83,8 +83,50 @@ static int offsetToLinkIndex(int dx, int dy)
 
 void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const unsigned char* selection, int numExpanded)
 {
-printf("TODO: %s:%d\n", __FILE__, __LINE__); 
+    CTypedPtrHeap<Node> *pq = new CTypedPtrHeap<Node>();
+    
+    for (int i = 0; i < width; ++i)
+    {
+        for (int j = 0; j < height; ++j)
+        {
+            NODE(nodes, i, j, width).state = INITIAL;
+        }
+    }
 
+    pq->Insert(&NODE(nodes, seedX, seedY, width));
+    while (!pq->IsEmpty()) {
+        Node q = *pq->ExtractMin();
+        printf("%d, %d, %d, %f\n", q.state, q.column, q.row, q.totalCost);
+        q.state = EXPANDED;
+        for (int i = 0; i < 8; ++i)
+        {
+            int offsetX, offsetY;
+            q.nbrNodeOffset(offsetX, offsetY, i);
+
+            int neighborCol = offsetX + q.column;
+            int neighborRow = offsetY + q.row;
+
+            if (neighborRow < 0 || neighborRow >= height || neighborCol < 0 || neighborCol >= width) continue;
+            Node r = NODE(nodes, neighborCol, neighborRow, width);
+
+            // printf("%i, %i, %i, %i, %i, %i, %i\n", r.column, r.row, q.column, q.row, offsetX, offsetY, r.state);
+
+            if (r.state == INITIAL)
+            {
+                r.totalCost = q.totalCost + q.linkCost[i];
+                r.state = ACTIVE;
+                r.prevNode = &q;
+                pq->Insert(&r);
+            }
+            else if (r.state == ACTIVE)
+            {
+                if (q.totalCost + q.linkCost[i] < r.totalCost)
+                {
+                    r.totalCost = q.totalCost + q.linkCost[i];
+                }
+            }
+        }
+    }
 }
 /************************ END OF TODO 4 ***************************/
 
@@ -104,8 +146,15 @@ printf("TODO: %s:%d\n", __FILE__, __LINE__);
 
 void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* nodes, int width, int height)
 {
-printf("TODO: %s:%d\n", __FILE__, __LINE__); 
+    Node seed = *path->RemoveHead();
+    Node *curNode = &NODE(nodes, freePtX, freePtY, width);
 
+    while (curNode != &seed) {
+        path->AddHead(curNode->prevNode);
+        curNode = curNode->prevNode;
+    }
+
+    path->AddHead(&seed);
 }
 /************************ END OF TODO 5 ***************************/
 
