@@ -38,8 +38,13 @@ void image_filter(double* rsltImg, const unsigned char* origImg, const unsigned 
 
 for (int i = 0; i < imgWidth; i++) {
 	for (int j = 0; j < imgHeight; j++) {
-		double pixel[3] = {0.0, 0.0, 0.0};
-		pixel_filter(pixel, i, j, origImg, imgWidth, imgHeight, kernel, knlWidth, knlHeight, scale, offset);
+		double pixel [3];
+		for (int c = 0; c < 3; c++) {
+			pixel[c] = origImg[3*(j*imgWidth+i)+c];
+		}
+		if (selection == NULL || selection[j*imgWidth+i] == 1) {
+			pixel_filter(pixel, i, j, origImg, imgWidth, imgHeight, kernel, knlWidth, knlHeight, scale, offset);
+		}
 		for (int c = 0; c < 3; c++) {
 			rsltImg[3*(j*imgWidth+i)+c] = pixel[c];
 		}

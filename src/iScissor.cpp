@@ -22,11 +22,6 @@ inline unsigned char PIXEL(const unsigned char* p, int i, int j, int c, int widt
     return *(p + 3 * (j * width + i) + c);
 }
 
-inline double INTENSITY(const unsigned char* p, int i, int j, int width)
-{
-	return (PIXEL(p, i, j, 'r', width) + PIXEL(p, i, j, 'g', width) + PIXEL(p, i, j, 'b', width))/3.0;
-}
-
 /************************ TODO 1 ***************************
  *InitNodeBuf
  *	INPUT:
@@ -39,19 +34,29 @@ inline double INTENSITY(const unsigned char* p, int i, int j, int width)
 void InitNodeBuf(Node* nodes, const unsigned char* img, int imgWidth, int imgHeight)
 {
 
+double max = 0.0;
+
 for (int i = 0; i < imgWidth; i++) {
 	for (int j = 0; j < imgHeight; j++) {
-		double intensity = INTENSITY(img, i, j, imgWidth);
 		NODE(nodes, i, j, imgWidth).column = i;
 		NODE(nodes, i, j, imgWidth).row = j;
-		NODE(nodes, i, j, imgWidth).linkCost[0] = std::abs(intensity - INTENSITY(img, i+1, j, imgWidth));
-		NODE(nodes, i, j, imgWidth).linkCost[1] = std::abs(intensity - INTENSITY(img, i+1, j-1, imgWidth));
-		NODE(nodes, i, j, imgWidth).linkCost[2] = std::abs(intensity - INTENSITY(img, i, j-1, imgWidth));
-		NODE(nodes, i, j, imgWidth).linkCost[3] = std::abs(intensity - INTENSITY(img, i-1, j-1, imgWidth));
-		NODE(nodes, i, j, imgWidth).linkCost[4] = std::abs(intensity - INTENSITY(img, i-1, j, imgWidth));
-		NODE(nodes, i, j, imgWidth).linkCost[5] = std::abs(intensity - INTENSITY(img, i-1, j+1, imgWidth));
-		NODE(nodes, i, j, imgWidth).linkCost[6] = std::abs(intensity - INTENSITY(img, i, j+1, imgWidth));
-		NODE(nodes, i, j, imgWidth).linkCost[7] = std::abs(intensity - INTENSITY(img, i+1, j+1, imgWidth));
+		for (int d = 0; d < 8; d++) {
+			double pixel[] = {0.0, 0.0, 0.0};
+			pixel_filter(pixel, i, j, img, imgWidth, imgHeight, kernels[d], 3, 3, 1, 0);
+			double avg = (pixel[0] + pixel[1] + pixel[2])/3.0;
+			if (avg > max) {
+				max = avg;
+			}
+			NODE(nodes, i, j, imgWidth).linkCost[d] = avg;
+		}
+	}
+}
+
+for (int i = 0; i < imgWidth; i++) {
+	for (int j = 0; j < imgHeight; j++) {
+		for (int d = 0; d < 8; d++) {
+			NODE(nodes, i, j, imgWidth).linkCost[d] = max - NODE(nodes, i, j, imgWidth).linkCost[d];
+		}
 	}
 }
 
