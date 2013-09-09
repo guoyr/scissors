@@ -36,8 +36,6 @@ void image_filter(double* rsltImg, const unsigned char* origImg, const unsigned 
                   double scale, double offset)
 {
 
-printf("Filtering image\n");
-
 for (int i = 0; i < imgWidth; i++) {
 	for (int j = 0; j < imgHeight; j++) {
 		double pixel[3] = {0.0, 0.0, 0.0};
@@ -84,20 +82,17 @@ void pixel_filter(double rsltPixel[3], int x, int y, const unsigned char* origIm
                   double scale, double offset)
 {
 
-//printf("Filtering pixel %u, %u\n", x, y);
-
 for (int c = 0; c < 3; c++) {
 	for (int i = 0; i < knlWidth; i++) {
 		for (int j = 0; j < knlHeight; j++) {
 			int col = i + x - ((knlHeight - 1)/2);
 			int row = j + y - ((knlWidth - 1)/2);
-			if (col >= imgWidth) {
+			if (col >= imgWidth || col < 0) {
 				col = x;
 			}
-			if (row >= imgHeight) {
+			if (row >= imgHeight || row < 0) {
 				row = y;
 			}
-			//printf("Fetching pixel %u, %u\n", col, row);
 			rsltPixel[c] += kernel[j*knlWidth+i] * origImg[3*(row*imgWidth+col)+c];
 		}
 	}
