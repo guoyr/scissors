@@ -99,9 +99,9 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
     }
 
     pq->Insert(&NODE(nodes, seedX, seedY, width));
+
     while (!pq->IsEmpty()) {
-        Node q = *pq->ExtractMin();
-        printf("%d, %d, %d, %f\n", q.state, q.column, q.row, q.totalCost);
+        Node& q = *pq->ExtractMin();
         q.state = EXPANDED;
         for (int i = 0; i < 8; ++i)
         {
@@ -112,9 +112,7 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
             int neighborRow = offsetY + q.row;
 
             if (neighborRow < 0 || neighborRow >= height || neighborCol < 0 || neighborCol >= width) continue;
-            Node r = NODE(nodes, neighborCol, neighborRow, width);
-
-            // printf("%i, %i, %i, %i, %i, %i, %i\n", r.column, r.row, q.column, q.row, offsetX, offsetY, r.state);
+            Node& r = NODE(nodes, neighborCol, neighborRow, width);
 
             if (r.state == INITIAL)
             {
@@ -151,10 +149,10 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
 
 void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* nodes, int width, int height)
 {
-    Node seed = *path->RemoveHead();
-    Node *curNode = &NODE(nodes, freePtX, freePtY, width);
+    Node& seed = *path->RemoveHead();
+    Node& curNode = NODE(nodes, freePtX, freePtY, width);
 
-    while (curNode != &seed) {
+    while (curNode != seed) {
         path->AddHead(curNode->prevNode);
         curNode = curNode->prevNode;
     }
