@@ -102,7 +102,9 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
 
     pq->Insert(&NODE(nodes, seedX, seedY, width));
 
-    while (!pq->IsEmpty()) {
+    int curNumExpanded = 0;
+
+    while (!pq->IsEmpty() && curNumExpanded < numExpanded) {
         Node& q = *pq->ExtractMin();
         q.state = EXPANDED;
         for (int i = 0; i < 8; ++i)
@@ -131,6 +133,7 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
                 }
             }
         }
+        curNumExpanded ++;
     }
 }
 /************************ END OF TODO 4 ***************************/
