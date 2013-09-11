@@ -67,6 +67,7 @@ const double kernels[8][9] = {
     }
 };
 
+
 struct Node {
     //column and row:	remember the position of the node in original image so that its neighboring nodes can be located.
     //linkCost:			contains the costs of each link, as described in project page and in the SIGGRAPH95 paper.
@@ -133,11 +134,12 @@ struct Node {
     }
 };
 
+static int seedXX, seedYY;
+
 inline int operator < (const Node& a, const Node& b)
 {
     return a.totalCost < b.totalCost;
 }
-
 
 void InitNodeBuf(Node* nodes, const unsigned char* img, int width, int height);
 double CrossCorrelate(const double filterKernel[3][3], const unsigned char* img, int imgWidth, int imgHeight, int x, int y, int c);
@@ -146,11 +148,6 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
 void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* nodes, int width, int height);
 
 void SeedSnap(int& x, int& y, unsigned char* img, int width, int height);
-
-
-
-
-
 
 inline void DigitizeCost(unsigned char* cst, double lCost)
 {

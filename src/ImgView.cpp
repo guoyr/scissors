@@ -705,7 +705,7 @@ void ImgView::BrushSelection(int b)
             }
             LiveWireDP(col, row, nodeBuf, imgWidth, imgHeight, brushSelPtr, expanded);
 
-            printf("minimum path tree is finished\n");
+            printf("minimum path tree is finished 5\n");
 
             UpdateViewBuffer();
             redraw();
@@ -862,7 +862,7 @@ void ImgView::PartialExpanding(void)
             freePtY = (row - zoomPort[2]) / zoomFactor + targetPort[2];
             freePtY /= 3;
 
-            printf("minimum path tree is finished\n");
+            printf("minimum path tree is finished 6\n");
         }
 
         UpdateViewBuffer();
@@ -884,7 +884,7 @@ void ImgView::UpdatePathTree(void)
 
         LiveWireDP(col, row, nodeBuf, imgWidth, imgHeight, brushSelPtr, imgWidth * imgHeight);
 
-        printf("minimum path tree is finished\n");
+        printf("minimum path tree is finished 7\n");
     }
 }
 
@@ -1727,11 +1727,12 @@ int ImgView::handle(int c)
     if (c == FL_PUSH) {
         int x = Fl::event_x();
         int y = Fl::event_y();
-
         if (imgBuf) {
             if (Fl::event_button() == FL_LEFT_MOUSE) {
+
                 if ((Fl::get_key(FL_Control_L) || Fl::get_key(FL_Control_R)) && currentCntr.IsEmpty() && (drawMode == IMAGE_WITH_CONTOUR || drawMode == IMAGE_ONLY) ) {
                     // apply brush here.
+
                     int cntX = (x - zoomPort[0]) / zoomFactor + targetPort[0];
                     int cntY = (y - zoomPort[2]) / zoomFactor + targetPort[2];
 
@@ -1754,6 +1755,7 @@ int ImgView::handle(int c)
                     //if ((Fl::get_key(FL_Control_L)||Fl::get_key(FL_Control_R))
                     //	 && drawMode == IMAGE_WITH_CONTOUR)
                 {
+
                     int col = (x - zoomPort[0]) / zoomFactor + targetPort[0];
                     int row = (y - zoomPort[2]) / zoomFactor + targetPort[2];
 
@@ -1790,7 +1792,7 @@ int ImgView::handle(int c)
 
                         LiveWireDP(col, row, nodeBuf, imgWidth, imgHeight, brushSelPtr, imgWidth * imgHeight);
 
-                        printf("minimum path tree is finished\n");
+                        printf("minimum path tree is finished 1\n");
 
                         freePtX = col;
                         freePtY = row;
@@ -1798,6 +1800,7 @@ int ImgView::handle(int c)
                         redraw();
                     }
                 } else if (currentCntr.GetCount() && drawMode == IMAGE_WITH_CONTOUR) {
+
                     int col = (x - zoomPort[0]) / zoomFactor + targetPort[0];
                     int row = (y - zoomPort[2]) / zoomFactor + targetPort[2];
 
@@ -1806,6 +1809,7 @@ int ImgView::handle(int c)
                         UnMarkPath(freePtX, freePtY);
 
                         AppendCurrentContour(col, row); //must be called before LiveWireDP;
+
                         MarkAllContour();
 
                         printf("current seed position: ( %4d , %4d ).\n", col, row);
@@ -1821,7 +1825,7 @@ int ImgView::handle(int c)
                         freePtX = col;
                         freePtY = row;
 
-                        printf("minimum path tree is finished\n");
+                        printf("minimum path tree is finished 2\n");
 
                         redraw();
                     }
@@ -1855,6 +1859,7 @@ int ImgView::handle(int c)
                 int row = (y - zoomPort[2]) / zoomFactor + targetPort[2];
 
                 if (IsPtInRect(col, row, targetPort)) {
+
                     if (currentCntr.GetCount()) {
                         UnMarkPath(freePtX, freePtY);
                         MarkAllContour(col, row);
@@ -1863,7 +1868,9 @@ int ImgView::handle(int c)
                         freePtY = row;
 
                         redraw();
+
                     } else {
+
                         for (int k = 0; k < contours.GetSize(); k++) {
                             if (IsPtAroundContour(col, row, contours[k])) {
                                 if (0 <= selectedCntr && selectedCntr < contours.GetSize()) {
@@ -1879,7 +1886,9 @@ int ImgView::handle(int c)
                         }
                     }
                 }
+
             } else if (drawMode == GRAPH_WITH_PATH) {
+
                 int col = (x - zoomPort[0]) / zoomFactor + targetPort[0];
                 int row = (y - zoomPort[2]) / zoomFactor + targetPort[2];
                 col /= 3;
@@ -1976,7 +1985,7 @@ int ImgView::handle(int c)
                         freePtX = (x - zoomPort[0]) / zoomFactor + targetPort[0];
                         freePtY = (y - zoomPort[2]) / zoomFactor + targetPort[2];
 
-                        printf("minimum path tree is finished\n");
+                        printf("minimum path tree is finished 3\n");
 
                         MarkAllContour(freePtX, freePtY);
                     } else {
@@ -2070,7 +2079,7 @@ int ImgView::handle(int c)
                         freePtX = (x - zoomPort[0]) / zoomFactor + targetPort[0];
                         freePtY = (y - zoomPort[2]) / zoomFactor + targetPort[2];
 
-                        printf("minimum path tree is finished\n");
+                        printf("minimum path tree is finished 4\n");
 
                         MarkAllContour(freePtX, freePtY);
                     } else {

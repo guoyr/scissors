@@ -85,9 +85,10 @@ static int offsetToLinkIndex(int dx, int dy)
  *		the prevNode field of each node to its predecessor along the minimum
  *		cost path from the seed to that node.
  */
-
 void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const unsigned char* selection, int numExpanded)
 {
+    seedXX = seedX;
+    seedYY = seedY;
     CTypedPtrHeap<Node> *pq = new CTypedPtrHeap<Node>();
     
     for (int i = 0; i < width; ++i)
@@ -95,6 +96,7 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
         for (int j = 0; j < height; ++j)
         {
             NODE(nodes, i, j, width).state = INITIAL;
+            NODE(nodes, i, j, width).prevNode = NULL;
         }
     }
 
@@ -149,15 +151,18 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
 
 void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* nodes, int width, int height)
 {
-    Node& seed = *path->RemoveHead();
-    Node& curNode = NODE(nodes, freePtX, freePtY, width);
+    path = new CTypedPtrDblList<Node>();
 
+    Node* seed = &NODE(nodes, seedXX, seedYY, width);
+    Node* curNode = &NODE(nodes, freePtX, freePtY, width);
+
+    path->AddHead(seed);
     while (curNode != seed) {
         path->AddHead(curNode->prevNode);
         curNode = curNode->prevNode;
     }
 
-    path->AddHead(&seed);
+    // path->AddHead(seed);
 }
 /************************ END OF TODO 5 ***************************/
 
