@@ -34,6 +34,21 @@ inline unsigned char PIXEL(const unsigned char* p, int i, int j, int c, int widt
 void InitNodeBuf(Node* nodes, const unsigned char* img, int imgWidth, int imgHeight)
 {
 
+double newImgDoub [imgWidth * imgHeight * 3];
+unsigned char newImgChar [imgWidth * imgHeight * 3];
+
+double blurKernel[] = {
+	0.1111, 0.1111, 0.1111 ,
+	0.1111, 0.1112, 0.1111 ,
+	0.1111, 0.1111, 0.1111
+};
+
+image_filter(newImgDoub, img, NULL, imgWidth, imgHeight, blurKernel, 3, 3, 1, 0);
+
+for (int a = 0; a < imgWidth * imgHeight * 3; a++) {
+	newImgChar[a] = ceil(newImgDoub[a] - 0.5);
+}
+
 double max = 0.0;
 
 for (int i = 0; i < imgWidth; i++) {
@@ -42,8 +57,11 @@ for (int i = 0; i < imgWidth; i++) {
 		NODE(nodes, i, j, imgWidth).row = j;
 		for (int d = 0; d < 8; d++) {
 			double pixel[] = {0.0, 0.0, 0.0};
-			pixel_filter(pixel, i, j, img, imgWidth, imgHeight, kernels[d], 3, 3, 1, 0);
+			pixel_filter(pixel, i, j, newImgChar, imgWidth, imgHeight, kernels[d], 3, 3, 1, 0);
 			double avg = (pixel[0] + pixel[1] + pixel[2])/3.0;
+			if (d % 2 == 1) {
+				avg = SQRT2 * avg;
+			}
 			if (avg > max) {
 				max = avg;
 			}
@@ -56,6 +74,7 @@ for (int i = 0; i < imgWidth; i++) {
 	for (int j = 0; j < imgHeight; j++) {
 		for (int d = 0; d < 8; d++) {
 			NODE(nodes, i, j, imgWidth).linkCost[d] = max - NODE(nodes, i, j, imgWidth).linkCost[d];
+			
 		}
 	}
 }
@@ -154,8 +173,6 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
 
 void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* nodes, int width, int height)
 {
-    path = new CTypedPtrDblList<Node>();
-
     Node* seed = &NODE(nodes, seedXX, seedYY, width);
     Node* curNode = &NODE(nodes, freePtX, freePtY, width);
 
@@ -170,7 +187,7 @@ void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* 
 /************************ END OF TODO 5 ***************************/
 
 /************************ An Extra Credit Item ***************************
- *SeeSnap:
+ *SeedSnap:
  *	INPUT:
  *		img:				a RGB image buffer of size width by height;
  *		width, height:		dimensions of the image buffer;

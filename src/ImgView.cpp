@@ -1990,6 +1990,7 @@ int ImgView::handle(int c)
                         MarkAllContour(freePtX, freePtY);
                     } else {
                         MarkAllContour();
+
                     }
 
                     redraw();
