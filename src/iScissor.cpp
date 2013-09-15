@@ -176,12 +176,10 @@ void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* 
     Node* curNode = &NODE(nodes, freePtX, freePtY, width);
 
     path->AddHead(seed);
-    while (curNode != seed) {
+    while (curNode->prevNode) {
         path->AddHead(curNode->prevNode);
         curNode = curNode->prevNode;
     }
-
-    // path->AddHead(seed);
 }
 /************************ END OF TODO 5 ***************************/
 

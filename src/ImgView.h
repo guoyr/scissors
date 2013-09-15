@@ -177,6 +177,9 @@ public:
 	//called if help menu item is selected.
 	void AboutMe();
 
+	//
+	void updateBrushSelection(int x, int y);
+
 protected:
 
 	//the following functions help to implement file I/O, memory allocate/copy/free

@@ -35,8 +35,8 @@ ImgView::ImgView(int x, int y, int w, int h, const char* label) : Fl_Double_Wind
     scissorPanelUI->expanded->deactivate();
 
     brushSelection = NULL;
-    brushType = ROUND_BRUSH;
     brushSize = 20;
+    brushType = ROUND_BRUSH;
     brushRadius2 = brushSize * brushSize;
 
     brushOpacity = 0.5;
@@ -1105,7 +1105,7 @@ void ImgView::UnMarkPath(int col, int row)
     }
 }
 
-void ImgView:: MarkPath(const CTypedPtrDblList <Seed>* cntr, const unsigned char clr[3])
+void ImgView::MarkPath(const CTypedPtrDblList <Seed>* cntr, const unsigned char clr[3])
 {
     if (drawMode == IMAGE_WITH_CONTOUR) {
         CTypedPtrDblElement <Seed>* seedEle = cntr->GetHeadPtr();
@@ -1226,12 +1226,12 @@ void ImgView::UnMarkPath(const CTypedPtrDblList <Seed>* cntr)
     }
 }
 
-void ImgView:: MarkCurrentContour(void)
+void ImgView::MarkCurrentContour(void)
 {
     MarkPath(&currentCntr, SELECTED_PATH_COLOR);
 }
 
-void ImgView:: MarkPreviousContour(void)
+void ImgView::MarkPreviousContour(void)
 {
     for (int i = 0; i < contours.GetSize(); i++) {
         if (i == selectedCntr) {
@@ -1242,7 +1242,7 @@ void ImgView:: MarkPreviousContour(void)
     }
 }
 
-void ImgView:: MarkAllContour(void)
+void ImgView::MarkAllContour(void)
 {
     MarkCurrentContour();
     MarkPreviousContour();
@@ -1254,12 +1254,12 @@ void ImgView::MarkAllContour(int col, int row)
     MarkPath(col, row, SELECTED_PATH_COLOR);
 }
 
-void ImgView:: UnMarkCurrentContour(void)
+void ImgView::UnMarkCurrentContour(void)
 {
     UnMarkPath(&currentCntr);
 }
 
-void ImgView:: UnMarkPreviousContour(void)
+void ImgView::UnMarkPreviousContour(void)
 {
     for (int i = 0; i < contours.GetSize(); i++) {
         UnMarkPath(contours[i]);
@@ -1267,7 +1267,7 @@ void ImgView:: UnMarkPreviousContour(void)
 
 }
 
-void ImgView:: UnMarkAllContour(void)
+void ImgView::UnMarkAllContour(void)
 {
     UnMarkCurrentContour();
     UnMarkPreviousContour();
@@ -1723,6 +1723,20 @@ void ImgView::resize(int x, int y, int w, int h)
     Fl_Double_Window::resize(x, y, w, h);
 }
 
+void ImgView::updateBrushSelection(int x, int y)
+{
+    for (int i = -brushSize; i < brushSize+1; ++i)
+    {
+        for (int j = -brushSize; j < brushSize+1; ++j)
+        {
+            if (i*i + j*j <= brushRadius2) {
+                brushSelection[(y+j)*imgWidth+x+i] = 1;
+
+            }
+        }
+    }
+}
+
 int ImgView::handle(int c)
 {
     if (c == FL_PUSH) {
@@ -1739,12 +1753,8 @@ int ImgView::handle(int c)
 
                     //int i,j;
 
-                    /********************TO DO********************
-                     * apply brush here, by updating brushSelection.  You'll also need to update LiveWireDP to
-                     * ensure that the live wire with brush selection works correctly
-                     *
-                     */
-
+                    
+                    updateBrushSelection(cntX, cntY);
                     printf("selecting region by brush (1): to be implemented in ImgView.cpp\n");
                     /******************************************************/
                     UpdateImgBufOpacity();
@@ -1932,12 +1942,7 @@ int ImgView::handle(int c)
 
                     //int i,j;
 
-                    /********************TO DO********************
-                     * apply brush here, by updating brushSelection.  You'll also need to update LiveWireDP to
-                     * ensure that the live wire with brush selection works correctly
-                     *
-                     */
-
+                    updateBrushSelection(cntX, cntY);
                     printf("selecting region by brush (2): to be implemented in ImgView.cpp\n");
                     /******************************************************/
                     UpdateImgBufOpacity();

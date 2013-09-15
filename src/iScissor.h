@@ -2,6 +2,7 @@
 #define iScissor_H
 
 #include "imgflt.h"
+#include <ctime>
 
 const int INITIAL = 0;
 const int ACTIVE = 1;
@@ -134,7 +135,9 @@ struct Node {
     }
 };
 
-static int seedXX, seedYY;
+static int seedXX, seedYY; //seed positions
+static int* coolPath;
+static std::clock_t startTime;
 
 inline int operator < (const Node& a, const Node& b)
 {
