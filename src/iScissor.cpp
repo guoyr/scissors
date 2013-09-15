@@ -33,51 +33,50 @@ inline unsigned char PIXEL(const unsigned char* p, int i, int j, int c, int widt
 
 void InitNodeBuf(Node* nodes, const unsigned char* img, int imgWidth, int imgHeight)
 {
+	double *newImgDoub = new double[imgWidth * imgHeight * 3];
+	unsigned char *newImgChar = new unsigned char[imgWidth * imgHeight * 3];
 
-double newImgDoub [imgWidth * imgHeight * 3];
-unsigned char newImgChar [imgWidth * imgHeight * 3];
+	double blurKernel[] = {
+		0.1111, 0.1111, 0.1111 ,
+		0.1111, 0.1112, 0.1111 ,
+		0.1111, 0.1111, 0.1111
+	};
 
-double blurKernel[] = {
-	0.1111, 0.1111, 0.1111 ,
-	0.1111, 0.1112, 0.1111 ,
-	0.1111, 0.1111, 0.1111
-};
+	image_filter(newImgDoub, img, NULL, imgWidth, imgHeight, blurKernel, 3, 3, 1, 0);
+	
+	for (int a = 0; a < imgWidth * imgHeight * 3; a++) {
+		newImgChar[a] = ceil(newImgDoub[a] - 0.5);
+	}
 
-image_filter(newImgDoub, img, NULL, imgWidth, imgHeight, blurKernel, 3, 3, 1, 0);
+	double max = 0.0;
 
-for (int a = 0; a < imgWidth * imgHeight * 3; a++) {
-	newImgChar[a] = ceil(newImgDoub[a] - 0.5);
-}
-
-double max = 0.0;
-
-for (int i = 0; i < imgWidth; i++) {
-	for (int j = 0; j < imgHeight; j++) {
-		NODE(nodes, i, j, imgWidth).column = i;
-		NODE(nodes, i, j, imgWidth).row = j;
-		for (int d = 0; d < 8; d++) {
-			double pixel[] = {0.0, 0.0, 0.0};
-			pixel_filter(pixel, i, j, newImgChar, imgWidth, imgHeight, kernels[d], 3, 3, 1, 0);
-			double avg = (pixel[0] + pixel[1] + pixel[2])/3.0;
-			if (d % 2 == 1) {
-				avg = SQRT2 * avg;
+	for (int i = 0; i < imgWidth; i++) {
+		for (int j = 0; j < imgHeight; j++) {
+			NODE(nodes, i, j, imgWidth).column = i;
+			NODE(nodes, i, j, imgWidth).row = j;
+			for (int d = 0; d < 8; d++) {
+				double pixel[] = {0.0, 0.0, 0.0};
+				pixel_filter(pixel, i, j, newImgChar, imgWidth, imgHeight, kernels[d], 3, 3, 1, 0);
+				double avg = (abs(pixel[0]) + abs(pixel[1]) + abs(pixel[2]))/3.0;
+				if (d % 2 == 1) {
+					avg = SQRT2 * avg;
+				}
+				if (avg > max) {
+					max = avg;
+				}
+				NODE(nodes, i, j, imgWidth).linkCost[d] = avg;
 			}
-			if (avg > max) {
-				max = avg;
-			}
-			NODE(nodes, i, j, imgWidth).linkCost[d] = avg;
 		}
 	}
-}
 
-for (int i = 0; i < imgWidth; i++) {
-	for (int j = 0; j < imgHeight; j++) {
-		for (int d = 0; d < 8; d++) {
-			NODE(nodes, i, j, imgWidth).linkCost[d] = max - NODE(nodes, i, j, imgWidth).linkCost[d];
+	for (int i = 0; i < imgWidth; i++) {
+		for (int j = 0; j < imgHeight; j++) {
+			for (int d = 0; d < 8; d++) {
+				NODE(nodes, i, j, imgWidth).linkCost[d] = max - NODE(nodes, i, j, imgWidth).linkCost[d];
 			
+			}
 		}
 	}
-}
 
 }
 /************************ END OF TODO 1 ***************************/
@@ -198,7 +197,71 @@ void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* 
 
 void SeedSnap(int& x, int& y, unsigned char* img, int width, int height)
 {
-    printf("SeedSnap in iScissor.cpp: to be implemented for extra credit!\n");
+	double *dx = new double[width * height * 3];
+	double *dy = new double[width * height * 3];
+	
+	unsigned char *selection = new unsigned char[width * height];
+
+	int max = 0;
+	int maxCol;
+	int maxRow;
+
+	double dxKernel[] = {
+		-0.8889, 0.1111, 1.1111,
+		-1.8889, 0.1112, 2.1111,
+		-0.8889, 0.1111, 1.1111
+	};
+
+	double dyKernel[] = {
+		1.1111, 2.1111, 1.1111,
+		0.1111, 0.1112, 0.1111,
+		-0.8889, -1.8889, -0.8889
+	};
+
+	for (int i = -10; i <= 10; i++) {
+		for (int j = -10; j <= 10; j++) {
+			selection[j*width+i] = 1;
+		}
+	}
+
+	image_filter(dx, img, selection, width, height, dxKernel, 3, 3, 9, 0);
+	image_filter(dy, img, selection, width, height, dyKernel, 3, 3, 9, 0);
+
+	for (int i = -10; i <= 10; i++) {
+		for (int j = -10; j <= 10; j++) {
+			int col = i + x;
+			int row = j + y;
+			
+			if (col >= 0 && col < width && row >= 0 && row < height) {
+				int dxVal = 0;
+				int dyVal = 0;
+				int deriv = 0;
+				double multiplier = 1 - (sqrt((i*i) + (j*j))/30);
+				for (int c = 0; c < 3; c++) {
+					dxVal += abs(dx[3*(row*width+col)+c]);
+					dyVal += abs(dy[3*(row*width+col)+c]);
+				}
+				if (dxVal > dyVal) {
+					deriv = dxVal;
+				} else {
+					deriv = dyVal;
+				}
+				deriv = deriv * multiplier;
+				printf("%3d ", deriv);
+				if (deriv > max) {
+					max = deriv;
+					maxCol = col;
+					maxRow = row;
+				}
+			}
+		}
+		printf("\n");
+	}
+
+	printf("You clicked on %u, %u, seed snapped to max value of %u found at %u, %u\n", x, y, max, maxCol, maxRow);
+
+	x = maxCol;
+	y = maxRow;
 }
 
 //generate a cost graph from original image and node buffer with all the link costs;

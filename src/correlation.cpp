@@ -36,20 +36,22 @@ void image_filter(double* rsltImg, const unsigned char* origImg, const unsigned 
                   double scale, double offset)
 {
 
-for (int i = 0; i < imgWidth; i++) {
-	for (int j = 0; j < imgHeight; j++) {
-		double pixel [3];
-		for (int c = 0; c < 3; c++) {
-			pixel[c] = origImg[3*(j*imgWidth+i)+c];
-		}
-		if (selection == NULL || selection[j*imgWidth+i] == 1) {
-			pixel_filter(pixel, i, j, origImg, imgWidth, imgHeight, kernel, knlWidth, knlHeight, scale, offset);
-		}
-		for (int c = 0; c < 3; c++) {
-			rsltImg[3*(j*imgWidth+i)+c] = pixel[c];
+printf("Filtering image!\n");
+
+	for (int i = 0; i < imgWidth; i++) {
+		for (int j = 0; j < imgHeight; j++) {
+			double pixel [3];
+			for (int c = 0; c < 3; c++) {
+				pixel[c] = origImg[3*(j*imgWidth+i)+c];
+			}
+			if (selection == NULL || selection[j*imgWidth+i] == 1) {
+				pixel_filter(pixel, i, j, origImg, imgWidth, imgHeight, kernel, knlWidth, knlHeight, scale, offset);
+			}
+			for (int c = 0; c < 3; c++) {
+				rsltImg[3*(j*imgWidth+i)+c] = pixel[c];
+			}
 		}
 	}
-}
 
 }
 
@@ -87,23 +89,23 @@ void pixel_filter(double rsltPixel[3], int x, int y, const unsigned char* origIm
                   double scale, double offset)
 {
 
-for (int c = 0; c < 3; c++) {
-	for (int i = 0; i < knlWidth; i++) {
-		for (int j = 0; j < knlHeight; j++) {
-			int col = i + x - ((knlHeight - 1)/2);
-			int row = j + y - ((knlWidth - 1)/2);
-			if (col >= imgWidth || col < 0) {
-				col = x;
+	for (int c = 0; c < 3; c++) {
+		for (int i = 0; i < knlWidth; i++) {
+			for (int j = 0; j < knlHeight; j++) {
+				int col = i + x - ((knlHeight - 1)/2);
+				int row = j + y - ((knlWidth - 1)/2);
+				if (col >= imgWidth || col < 0) {
+					col = x;
+				}
+				if (row >= imgHeight || row < 0) {
+					row = y;
+				}
+				rsltPixel[c] += kernel[j*knlWidth+i] * origImg[3*(row*imgWidth+col)+c];
 			}
-			if (row >= imgHeight || row < 0) {
-				row = y;
-			}
-			rsltPixel[c] += kernel[j*knlWidth+i] * origImg[3*(row*imgWidth+col)+c];
 		}
+		rsltPixel[c] /= scale;
+		rsltPixel[c] += offset;
 	}
-	rsltPixel[c] /= scale;
-	rsltPixel[c] += offset;
-}
 
 }
 
