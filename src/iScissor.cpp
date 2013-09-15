@@ -133,7 +133,7 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
             int neighborCol = offsetX + q.column;
             int neighborRow = offsetY + q.row;
 
-            if (neighborRow < 0 || neighborRow >= height || neighborCol < 0 || neighborCol >= width) continue;
+            if (neighborRow < 0 || neighborRow >= height || neighborCol < 0 || neighborCol >= width || (selection != NULL && selection[neighborCol*width+neighborRow] == 0)) continue;
             Node& r = NODE(nodes, neighborCol, neighborRow, width);
 
             if (r.state == INITIAL)

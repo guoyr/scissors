@@ -890,6 +890,7 @@ void ImgView::UpdatePathTree(void)
 
 void ImgView::MarkPath(int col, int row, const unsigned char clr[3])
 {
+    
     if (drawMode == IMAGE_WITH_CONTOUR) {
 
         int freePtIndex = row * imgWidth + col;
@@ -2043,7 +2044,6 @@ int ImgView::handle(int c)
 
                 if (IsPtInRect(col, row, targetPort)) {
                     UnMarkPath(freePtX, freePtY);
-
 
                     FinishCurrentContour();
 
