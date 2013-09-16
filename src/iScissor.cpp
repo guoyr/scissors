@@ -133,7 +133,7 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
             int neighborCol = offsetX + q.column;
             int neighborRow = offsetY + q.row;
 
-            if (neighborRow < 0 || neighborRow >= height || neighborCol < 0 || neighborCol >= width || (selection != NULL && selection[neighborCol*width+neighborRow] == 0)) continue;
+            if (neighborRow < 0 || neighborRow >= height || neighborCol < 0 || neighborCol >= width || (selection != NULL && selection[neighborRow*width+neighborCol] == 0)) continue;
             Node& r = NODE(nodes, neighborCol, neighborRow, width);
 
             if (r.state == INITIAL)
@@ -245,7 +245,6 @@ void SeedSnap(int& x, int& y, unsigned char* img, int width, int height)
 					deriv = dyVal;
 				}
 				deriv = deriv * multiplier;
-				printf("%3d ", deriv);
 				if (deriv > max) {
 					max = deriv;
 					maxCol = col;
@@ -253,7 +252,6 @@ void SeedSnap(int& x, int& y, unsigned char* img, int width, int height)
 				}
 			}
 		}
-		printf("\n");
 	}
 
 	printf("You clicked on %u, %u, seed snapped to max value of %u found at %u, %u\n", x, y, max, maxCol, maxRow);
