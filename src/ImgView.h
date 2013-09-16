@@ -1,6 +1,7 @@
 #ifndef IMGVIEW_H
 #define IMGVIEW_H
 
+#include <ctime>
 #include "imgflt.h"
 
 const unsigned char BK_COLOR[3] = {212,208,200};
@@ -92,6 +93,9 @@ protected:
 
 	//what to draw in the view port, depending on what button you press in scissor panel. 
 	int drawMode;	
+	clock_t start;
+	CTypedPtrDblList<Node>* cooledPath;
+
 
 public:
 
@@ -111,6 +115,7 @@ public:
 	void OpenImage(void);	
 	void SaveContour(void);	
 	void SaveMask(void);
+	void CoolPath();
 	// Publicized by Loren.
 	void OpenImage(const char *filename);
 	void SaveContour(const char *filename);

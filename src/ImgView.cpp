@@ -888,10 +888,16 @@ void ImgView::UpdatePathTree(void)
     }
 }
 
+void ImgView::CoolPath(void)
+{
+
+}
+
 void ImgView::MarkPath(int col, int row, const unsigned char clr[3])
 {
     
     if (drawMode == IMAGE_WITH_CONTOUR) {
+
 
         int freePtIndex = row * imgWidth + col;
         Node* node = nodeBuf + freePtIndex;
@@ -916,9 +922,15 @@ void ImgView::MarkPath(int col, int row, const unsigned char clr[3])
             }
         }
 
+        double duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
+        // printf("%f\n",duration);
+        CTypedPtrDblList<Node> *curPath;
         while (node->prevNode) {
             node = node->prevNode;
 
+            if (duration > 3.0 || !start) {
+                // curPath->AddHead(node);
+            }
             imgX = node->column;
             imgY = node->row;
 
@@ -939,6 +951,22 @@ void ImgView::MarkPath(int col, int row, const unsigned char clr[3])
                 }
             }
         }
+
+        if (!start || duration > 3.0) {
+            start = clock();
+        }
+
+        // CTypedPtrDblElement<Node>* oldPathNode = cooledPath->GetHeadPtr();
+        // CTypedPtrDblElement<Node>* newPathNode = curPath->GetHeadPtr();
+        // if (duration > 3.0) {
+        //     while (oldPathNode->Data() == newPathNode->Data()) {
+        //         oldPathNode = oldPathNode->Next();
+        //         newPathNode = newPathNode->Next();
+        //     }
+        //     //TODO: add path here
+        //     cooledPath = curPath;
+        // }
+
     } else if (drawMode == GRAPH_WITH_PATH) {
         int imgX = col / 3;
         int imgY = row / 3;
