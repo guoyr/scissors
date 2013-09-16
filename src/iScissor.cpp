@@ -115,6 +115,7 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
         {
             NODE(nodes, i, j, width).state = INITIAL;
             NODE(nodes, i, j, width).prevNode = NULL;
+            NODE(nodes, i, j, width).distance = 0;
         }
     }
 
@@ -141,13 +142,16 @@ void LiveWireDP(int seedX, int seedY, Node* nodes, int width, int height, const 
                 r.totalCost = q.totalCost + q.linkCost[i];
                 r.state = ACTIVE;
                 r.prevNode = &q;
+                r.distance = q.distance + linkLengths[i];
                 pq->Insert(&r);
             }
             else if (r.state == ACTIVE)
             {
-                if (q.totalCost + q.linkCost[i] < r.totalCost)
+                if ((q.totalCost + q.linkCost[i] < r.totalCost) || (q.totalCost + q.linkCost[i] == r.totalCost && r.distance > q.distance + linkLengths[i]))
                 {
                     r.totalCost = q.totalCost + q.linkCost[i];
+                    r.prevNode = &q;
+                    r.distance = q.distance + linkLengths[i];
                 }
             }
         }
@@ -175,11 +179,13 @@ void MinimumPath(CTypedPtrDblList <Node>* path, int freePtX, int freePtY, Node* 
     Node* seed = &NODE(nodes, seedXX, seedYY, width);
     Node* curNode = &NODE(nodes, freePtX, freePtY, width);
 
-    path->AddHead(seed);
+    path->AddHead(curNode);
     while (curNode->prevNode) {
         path->AddHead(curNode->prevNode);
         curNode = curNode->prevNode;
     }
+    path->AddHead(seed);
+
 }
 /************************ END OF TODO 5 ***************************/
 

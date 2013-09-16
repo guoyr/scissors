@@ -80,6 +80,7 @@ struct Node {
     double linkCost[8];
     int state;
     double totalCost;
+    double distance;
     Node* prevNode;
 
     Node () {
