@@ -1,0 +1,57 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- 
+This is a skeleton html file that you can use to get you started on each new 
+HTML project
+
+Name: Alex Gerstenberger, Robert Guo
+Class: CS4670/5670
+-->
+<html>
+
+<head>
+	<title>Project 1 Report</title>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Project 1 Report</title>
+        <meta name="viewport" content="width=600, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+</head>
+
+<body>
+<div style="width:800px;">
+    <h1>Project 1 Report</h1>
+    <h3>CS4670/5670</h3>
+    <h3>Alex Gerstenberger, Robert Guo</h3>
+    <p>For the project, we thought that the most difficult parts were finding the best kernel for smoothing the image, and figuring out how pointers in C++ work. We did most of the extra credit whistles: blurring, seedsnap, brush selection and shortest path.</p>
+    <p>For the artifact, we thought it'd be cool to superimpose the head of Cornell CV professors onto the classic photo of the WWII big three (FDR, Churchill, Stalin). Here's what the end result looks like:</p>
+
+            <img src="artifact.jpg">
+            <br></br>
+
+    <p>We started by finding images of Ramin Zabih, Noah Snavely and David Huttenlocher and using our Intelligent Scissors app to create alpha masks of their heads.</p>
+
+            <img src="snavely_mask.png">
+            <img src="snavely.jpg ">
+            <br></br>
+            <img src="hutt_mask.png">
+            <img src="hutt.png">
+            <br></br>
+            <img src="rdz_mask.png">
+            <img src="rdz.png">
+
+    <p>After cutting out the heads using these masks, we converted them to black and white, added a bit of blurring and noise, and positioned the heads appropriately. Finally, we did a bit of brushing to fill in shadows and fix some irregularities.</p>
+
+    <p>The original image looks like this:</p>
+            <img src="big_three.jpg">
+            <br></br>
+</div>
+</body>
+</html>
